@@ -42,3 +42,11 @@ $factory->define(CodeProject\Entities\Project::class, function (Faker\Generator 
         'client_id' => 1,
     ];
 });
+
+$factory->define(CodeProject\Entities\User::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->name,
+        'email' => $faker->email,
+        'password' => $faker->password,
+    ];
+});
