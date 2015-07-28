@@ -45,4 +45,13 @@ class ClientService
 
   }
 
+  public function search($id)
+  {
+    try{
+      return ["success" => $this->repository->find($id)];
+    }catch(\Exception $e) {
+      return ["success" => false, "message" => "Cliente ID: {$id} inexistente."];
+    }
+  }
+
 }

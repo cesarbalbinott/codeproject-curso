@@ -49,7 +49,11 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
+      $project = $this->service->search($id);
+      if($project['success']){
         return $this->repository->with(['user', 'client'])->find($id);
+      }
+      return $project;
     }
 
     /**
@@ -61,7 +65,26 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $this->service->update($request->all(), $id);
+      try{
+        $project = $this->service->search($id);
+        if($project['success']){
+          if($this->service->update($request->all(), $id)){
+            return ["success" => true,
+                    "message" => "Projeto {$id} alterado com sucesso!",
+                    "alteracao" => $project];
+          }else{
+            return ["success" => false,
+                    "message" => "Não foi possível alterar o projeto: {$id}."
+                   ];
+          }
+        }
+        return $project;
+        }catch (\Exception $e) {
+            return [
+                'success' => 'false',
+                'message' => "Não foi possível alterar o projeto: {$id}"
+            ];
+        }
     }
 
     /**
@@ -72,6 +95,25 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-       $this->repository->find($id)->delete();
+      try{
+        $project = $this->service->search($id);
+        if($project['success']){
+          if($this->repository->find($id)->delete()){
+            return ["success" => true,
+                    "message" => "Projeto {$id} excluido com sucesso!"];
+          }else{
+            return ["success" => false,
+                    "message" => "Não foi possível excluir o projeto: {$id}."
+                   ];
+          }
+        }
+        return $project;
+        }catch (\Exception $e) {
+            return [
+                'success' => 'false',
+                'message' => "Não foi possível excluir o projeto: {$id}"
+            ];
+        }
+
     }
 }

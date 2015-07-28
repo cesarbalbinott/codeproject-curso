@@ -45,4 +45,13 @@ class ProjectService
 
   }
 
+  public function search($id)
+  {
+    try{
+      return ["success" => $this->repository->find($id)];
+    }catch(\Exception $e) {
+      return ["success" => false, "message" => "Projeto ID: {$id} inexistente."];
+    }
+  }
+
 }
